@@ -1,26 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import HttpClient from './services/http-client';
+import TasksPage from './components/TasksPage/tasks-page'
+
+class App extends React.Component {
+  httpClient = new HttpClient();
+
+  render() {
+    return (
+      <div className="App">
+        <TasksPage client={this.httpClient} />
+      </div>
+    );
+  }
 }
 
 export default App;
