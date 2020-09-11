@@ -1,7 +1,7 @@
 import React from 'react';
 
 import TaskList from './task-list/task-list';
-import TaskWindow from './task-window/task-window';
+import TaskForm from './TaskForm/TaskForm';
 
 export default class TasksPage extends React.Component {
   state = {
@@ -24,13 +24,23 @@ export default class TasksPage extends React.Component {
     })
   }
 
+  onFinish = ({ task, scopes }) => {
+    const modTask = {
+      ...task,
+      'startTime': task['startTime'].format('YYYY-MM-DD'),
+      'endTime': task['endTime'].format('YYYY-MM-DD'),
+      items: scopes
+    };
+    console.log(modTask)
+  };
+
   render() {
-    const { taskList, currentTask } = this.state;
-    const visibleTask = (taskList && taskList.filter(el => el.id === currentTask));
+    const { taskList } = this.state;
+
     return (
       <div className="tasks-page">
-        {taskList && <TaskList data={taskList} handleTaskListClick={this.handleTaskListClick} />}
-        {currentTask && <TaskWindow data={visibleTask[0]} />}
+        {taskList && <TaskList data={taskList} />}
+        <TaskForm onFinish={this.onFinish} />
       </div>
     )
   }
