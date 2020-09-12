@@ -17,7 +17,7 @@ const FormListWData = (props) => {
               <div key={field.name}>
                 <Form.Item
                   label="Title"
-                  wrapperCol={{ offset: 8, span: 8 }}
+                  wrapperCol={{ offset: 2, span: 8 }}
                   name={[field.name, 'title']}
                   fieldKey={[field.fieldKey, 'title']}
                   rules={[{ required: true, message: 'Your input is required' }]}
@@ -26,7 +26,7 @@ const FormListWData = (props) => {
                 </Form.Item>
                 <Form.Item
                   label="Description"
-                  wrapperCol={{ offset: 8, span: 8 }}
+                  wrapperCol={{ offset: 2, span: 8 }}
                   name={[field.name, 'description']}
                   fieldKey={[field.fieldKey, 'description']}
                   rules={[{ required: true, message: 'Your input is required' }]}

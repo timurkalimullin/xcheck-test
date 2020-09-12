@@ -14,7 +14,7 @@ const TaskList = (props) => {
     {
       title: 'Action', key: 'operation', fixed: 'right', width: 100, render: (text) =>
         <Popconfirm title="Sure to delete?" onConfirm={() => deleteTask(text.name)}>
-          <a>Delete</a>
+          <a href="/">Delete</a>
         </Popconfirm>,
     },
   ];
@@ -48,7 +48,7 @@ const TaskList = (props) => {
       author,
       startTime,
       endTime,
-      description: (<React.Fragment>
+      descr: (<React.Fragment>
         <div style={{ marginLeft: "30px" }}>
           <h2>Description</h2>
           {description}
@@ -61,7 +61,7 @@ const TaskList = (props) => {
     <Table
       columns={columns}
       expandable={{
-        expandedRowRender: record => <div style={{ margin: 0 }}>{record.description}</div>
+        expandedRowRender: record => <div style={{ margin: 0 }}>{record.descr}</div>
       }}
       dataSource={data}
     />

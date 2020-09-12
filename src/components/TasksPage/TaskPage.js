@@ -2,7 +2,7 @@ import React from 'react';
 
 import TaskList from './TaskList/TaskList';
 import TaskForm from './TaskForm/TaskForm';
-import { Modal, Button } from 'antd';
+import { Button, message } from 'antd';
 
 export default class TasksPage extends React.Component {
   state = {
@@ -18,7 +18,7 @@ export default class TasksPage extends React.Component {
         this.setState(() => ({
           taskList: data
         }))
-      })
+      }).catch((err) => message.warning(`${err.message}`))
   }
 
   componentDidMount() {
@@ -47,19 +47,19 @@ export default class TasksPage extends React.Component {
       'endTime': task['endTime'].format('YYYY-MM-DD'),
       items: modRest
     };
-    console.log(modTask)
     this.client.createData(`tasks`, modTask)
       .then(() => {
         this.updatetaskList();
         this.setState({
           createTask: false
         });
-      })
+      }).catch((err) => message.warning(`${err.message}`))
   };
 
   deleteTask = (task) => {
     this.client.deleteData(`tasks/${task}`)
-      .then(() => this.updatetaskList());
+      .then(() => this.updatetaskList())
+      .catch((err) => message.warning(`${err.message}`))
   }
 
   render() {
@@ -69,7 +69,10 @@ export default class TasksPage extends React.Component {
       <div className="tasks-page">
         {taskList && <TaskList deleteTask={this.deleteTask} data={taskList} />}
         <Button type="primary" onClick={this.showCreateTask}>Create task</Button>
-        {createTask && <TaskForm onFinish={this.onFinish} onCancel={this.cancelCreateTask} />}
+        {createTask && <TaskForm
+          onFinish={this.onFinish}
+          onCancel={this.cancelCreateTask}
+        />}
       </div>
     )
   }

@@ -15,7 +15,7 @@ const TaskForm = (props) => {
     <React.Fragment>
       <h2 style={{ fontSize: "3em" }}>Task creation</h2>
       <Form {...layout} name="nest-messages" onFinish={props.onFinish} validateMessages={validateMessages}>
-        <Form.Item name={['task', 'id']} label="Name" required="true">
+        <Form.Item name={['task', 'id']} label="Name" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
         <Form.Item name={['task', 'description']} label="Description" >

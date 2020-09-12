@@ -5,6 +5,9 @@ export default class HttpClient {
 
   getData = async (address) => {
     const res = await fetch(`${this.url}/${address}`);
+    if (!res.ok) {
+      throw new Error(`Error: server error ${res.status}`)
+    }
     const json = await res.json();
     return json;
   };
@@ -17,6 +20,9 @@ export default class HttpClient {
       },
       body: JSON.stringify(data)
     });
+    if (!response.ok) {
+      throw new Error(`Error: server error ${response.status}`)
+    }
 
     const result = await response.json();
     return result;
@@ -31,6 +37,9 @@ export default class HttpClient {
       },
       body: JSON.stringify(data)
     });
+    if (!response.ok) {
+      throw new Error(`Error: server error ${response.status}`)
+    }
 
     const result = await response.json();
     return result;
@@ -43,6 +52,9 @@ export default class HttpClient {
         'Content-Type': 'application/json;charset=utf-8'
       }
     });
+    if (!response.ok) {
+      throw new Error(`Error: server error ${response.status}`)
+    }
 
     const result = await response.json();
     return result;
