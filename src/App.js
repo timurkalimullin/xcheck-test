@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 import HttpClient from './services/http-client';
-import TasksPage from './components/TasksPage/tasks-page'
+import TasksPage from './components/TasksPage/TaskPage';
 
 class App extends React.Component {
   httpClient = new HttpClient();
