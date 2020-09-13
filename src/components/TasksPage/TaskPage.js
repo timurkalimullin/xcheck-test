@@ -8,7 +8,7 @@ export default class TasksPage extends React.Component {
   state = {
     taskList: null,
     currentTask: null,
-    createTsk: false
+    taskModal: false
   }
   client = this.props.client;
 
@@ -16,7 +16,8 @@ export default class TasksPage extends React.Component {
     this.client.getData('tasks')
       .then((data) => {
         this.setState(() => ({
-          taskList: data
+          taskList: data,
+          currentTask: null
         }))
       }).catch((err) => message.warning(`${err.message}`))
   }
@@ -27,17 +28,31 @@ export default class TasksPage extends React.Component {
 
   showCreateTask = () => {
     this.setState({
-      createTask: true
+      taskModal: true,
+      currentTask: null
+    });
+  };
+
+  showEditTask = (e, task) => {
+    e.preventDefault();
+    const taskEdit = this.state.taskList.filter(item => {
+      console.log(task)
+      return item.id === task;
+    })[0]
+    console.log(taskEdit)
+    this.setState({
+      currentTask: taskEdit,
+      taskModal: true
     });
   };
 
   cancelCreateTask = () => {
     this.setState({
-      createTask: false
+      taskModal: false
     });
   };
 
-  onFinish = ({ task, ...rest }) => {
+  onFinish = ({ task, ...rest }, type) => {
     const modRest = Object.keys(rest).map(key => rest[key] ? rest[key] : null)
       .filter(el => el)
       .reduce((acc, val) => acc.concat(val), [])
@@ -47,13 +62,21 @@ export default class TasksPage extends React.Component {
       'endTime': task['endTime'].format('YYYY-MM-DD'),
       items: modRest
     };
-    this.client.createData(`tasks`, modTask)
-      .then(() => {
-        this.updatetaskList();
-        this.setState({
-          createTask: false
-        });
-      }).catch((err) => message.warning(`${err.message}`))
+    console.log(modTask)
+
+    if (type === 'create') {
+      this.client.createData(`tasks`, modTask)
+        .then(() => {
+          this.updatetaskList();
+          this.setState({
+            taskModal: false
+          });
+        }).catch((err) => message.warning(`${err.message}`))
+    } else if (type === 'edit') {
+      this.client.modifyData(`tasks/${task.id}`, modTask)
+        .then(() => this.updatetaskList())
+        .catch((err) => message.warning(`${err.message}`))
+    }
   };
 
   deleteTask = (task) => {
@@ -63,13 +86,14 @@ export default class TasksPage extends React.Component {
   }
 
   render() {
-    const { taskList, createTask } = this.state;
+    const { taskList, taskModal, currentTask } = this.state;
 
     return (
       <div className="tasks-page">
-        {taskList && <TaskList deleteTask={this.deleteTask} data={taskList} />}
+        {taskList && <TaskList deleteTask={this.deleteTask} editTask={this.showEditTask} data={taskList} />}
         <Button type="primary" onClick={this.showCreateTask}>Create task</Button>
-        {createTask && <TaskForm
+        {taskModal && <TaskForm
+          data={currentTask}
           onFinish={this.onFinish}
           onCancel={this.cancelCreateTask}
         />}

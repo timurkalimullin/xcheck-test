@@ -4,7 +4,7 @@ import { Table, Popconfirm } from 'antd';
 import { levels } from '../constants';
 
 const TaskList = (props) => {
-  const { deleteTask } = props;
+  const { deleteTask, editTask } = props;
   const columns = [
     { title: 'Name', dataIndex: 'name', key: 'name', sorter: (a, b) => a?.name > b?.name, },
     { title: 'Author', dataIndex: 'author', key: 'author', sorter: (a, b) => a?.author > b?.author, },
@@ -13,9 +13,12 @@ const TaskList = (props) => {
     { title: 'Deadline', dataIndex: 'endTime', key: 'endTime', sorter: (a, b) => a?.endTime > b?.endTime, },
     {
       title: 'Action', key: 'operation', fixed: 'right', width: 100, render: (text) =>
-        <Popconfirm title="Sure to delete?" onConfirm={() => deleteTask(text.name)}>
-          <a href="/">Delete</a>
-        </Popconfirm>,
+        <React.Fragment>
+          <Popconfirm title="Sure to delete?" onConfirm={() => deleteTask(text.name)}>
+            <a href="/">Delete</a>
+          </Popconfirm>
+          <a style={{ marginLeft: "20px" }} onClick={(e) => editTask(e, text.name)} href="/">Edit</a>
+        </React.Fragment>,
     },
   ];
   const data = [];

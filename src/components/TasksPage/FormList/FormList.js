@@ -4,7 +4,7 @@ import { Form, Input, InputNumber, Button } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { layout, levels } from '../constants';
 
-const FormListWData = (props) => {
+const FormList = (props) => {
   return (
     <Form.List
       {...layout}
@@ -102,4 +102,83 @@ const FormListWData = (props) => {
   )
 };
 
-export default FormListWData;
+const FormListEdit = (props) => {
+  const { data, category } = props;
+  const editedCategory = `${category}_edited`;
+
+  const modData = data.items.filter(el => el.category === levels[category]);
+  const editInputs = modData.map((data, i) => {
+    return (
+      <React.Fragment key={`${editedCategory}_${i}`}>
+        <Form.Item
+          label="Title"
+          wrapperCol={{ offset: 2, span: 8 }}
+          name={[`${editedCategory}_${i}`, 'title']}
+          rules={[{ required: true, message: 'Your input is required' }]}
+          initialValue={data.title}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Description"
+          wrapperCol={{ offset: 2, span: 8 }}
+          name={[`${editedCategory}_${i}`, 'description']}
+          rules={[{ required: true, message: 'Your input is required' }]}
+          initialValue={data.description}
+        >
+          <Input.TextArea placeholder="Description" />
+        </Form.Item>
+        <Form.Item
+          name={[`${editedCategory}_${i}`, 'minScore']}
+          label="Min score"
+          rules={[
+            {
+              type: 'number',
+              required: true
+            },
+          ]}
+          initialValue={data.minScore}
+        >
+          <InputNumber />
+        </Form.Item>
+        <Form.Item
+          name={[`${editedCategory}_${i}`, 'maxScore']}
+          label="Max score"
+          rules={[
+            {
+              type: 'number',
+              required: true
+            },
+          ]}
+          initialValue={data.maxScore}
+        >
+          <InputNumber />
+        </Form.Item>
+        <Form.Item
+          name={[`${editedCategory}_${i}`, 'id']}
+          initialValue={`${category}_pe${i + 1}`}
+          hidden="true"
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name={[`${editedCategory}_${i}`, 'category']}
+          initialValue={`${levels[category]}`}
+          hidden="true"
+        >
+          <Input />
+        </Form.Item>
+        <MinusCircleOutlined
+          style={{ marginBottom: "10px" }}
+          onClick={() => {
+
+          }}
+        />
+      </React.Fragment>
+    )
+  })
+  console.log(editInputs)
+  return editInputs;
+}
+
+export { FormList, FormListEdit };

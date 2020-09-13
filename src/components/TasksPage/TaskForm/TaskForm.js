@@ -1,20 +1,25 @@
 import React from 'react';
 import { Form, Input, DatePicker, Button } from 'antd';
-import FormListWData from '../FormList/FormList';
+import { FormList, FormListEdit } from '../FormList/FormList';
 import { layout, validateMessages, config, levels } from '../constants';
 
 const TaskForm = (props) => {
+  const { data } = props;
+
   const scopeList = Object.keys(levels).map(key => {
     return <React.Fragment key={key}>
       <h2 style={{ color: "gray" }}>{levels[key]}</h2>
-      <FormListWData name={key} />
+      {data && <FormListEdit category={key} data={data} />}
+      <FormList name={key} />
     </React.Fragment>
   })
 
   return (
     <React.Fragment>
-      <h2 style={{ fontSize: "3em" }}>Task creation</h2>
-      <Form {...layout} name="nest-messages" onFinish={props.onFinish} validateMessages={validateMessages}>
+      <h2 style={{ fontSize: "3em" }}>Task {data ? 'edit' : 'create'}</h2>
+      <Form {...layout} name="nest-messages"
+        onFinish={(values) => data ? props.onFinish(values, 'edit') : props.onFinish(values, 'create')}
+        validateMessages={validateMessages}>
         <Form.Item name={['task', 'id']} label="Name" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
