@@ -79,8 +79,11 @@ export default class TasksPage extends React.Component {
           this.setState({
             taskModal: false
           });
-        }).then(() => this.setState({ confirmLoading: false }))
-        .catch((err) => message.warning(`${err.message}`))
+        }).then(() => {
+          message.success('Task created');
+          this.setState({ confirmLoading: false });
+        })
+        .catch((err) => message.error(`${err.message}`))
     } else if (type === 'edit') {
       this.client.modifyData(`tasks/${this.state.currentTask.id}`, modTask)
         .then(() => {
@@ -89,8 +92,11 @@ export default class TasksPage extends React.Component {
             taskModal: false,
             currentTask: null
           });
-        }).then(() => this.setState({ confirmLoading: false }))
-        .catch((err) => message.warning(`${err.message}`))
+        }).then(() => {
+          message.success('Task modified')
+          this.setState({ confirmLoading: false });
+        })
+        .catch((err) => message.error(`${err.message}`))
     }
   };
 

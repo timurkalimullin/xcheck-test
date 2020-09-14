@@ -5,6 +5,7 @@ import { layout, validateMessages, config, levels } from '../constants';
 
 import './taskform.css';
 
+const authorName = 'Timur Kalimullin'
 class TaskForm extends React.Component {
   form = React.createRef();
   render() {
@@ -32,11 +33,11 @@ class TaskForm extends React.Component {
           destroyOnClose={true}
           onCancel={onCancel}
           onOk={() => {
-            this.form.validateFields()
+            this.form.current.validateFields()
               .then((values) => {
                 data ? onFinish(values, 'edit') : onFinish(values, 'create')
-              }).then(() => this.form.resetFields())
-              .catch((() => message.warning('Something went wrong!')))
+              }).then(() => this.form.current.resetFields())
+              .catch((() => message.error('Something went wrong!')))
           }}>
           <Form {...layout} name="nest-messages"
             ref={this.form}
@@ -70,7 +71,7 @@ class TaskForm extends React.Component {
             </Form.Item>
 
             <Form.Item name={['task', 'author']} label="Author"
-              initialValue={'Timur Kalimullin'} hidden={true}>
+              initialValue={data ? data.author : authorName} hidden={true}>
               <Input />
             </Form.Item>
 
