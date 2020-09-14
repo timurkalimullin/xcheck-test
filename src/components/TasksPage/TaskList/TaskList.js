@@ -14,16 +14,16 @@ const TaskList = (props) => {
     {
       title: 'Action', key: 'operation', fixed: 'right', width: 100, render: (text) =>
         <React.Fragment>
-          <Popconfirm title="Sure to delete?" onConfirm={() => deleteTask(text.name)}>
+          <Popconfirm title="Sure to delete?" onConfirm={() => deleteTask(text.id)}>
             <a href="/">Delete</a>
           </Popconfirm>
-          <a style={{ marginLeft: "20px" }} onClick={(e) => editTask(e, text.name)} href="/">Edit</a>
+          <a style={{ marginLeft: "20px" }} onClick={(e) => editTask(e, text.id)} href="/">Edit</a>
         </React.Fragment>,
     },
   ];
   const data = [];
   props.data.forEach((el) => {
-    const { id, author, state, items, startTime, endTime, description } = el;
+    const { id, author, state, items, startTime, endTime, description, taskName } = el;
 
     const scopes = Object.values(levels).map(category => {
       const singleScope = items.filter(item => item.category === category);
@@ -46,7 +46,8 @@ const TaskList = (props) => {
 
     data.push({
       key: id,
-      name: id,
+      id,
+      name: taskName,
       state,
       author,
       startTime,

@@ -103,7 +103,7 @@ const FormList = (props) => {
 };
 
 const FormListEdit = (props) => {
-  const { data, category } = props;
+  const { data, category, removeScopeItem } = props;
   const editedCategory = `${category}_edited`;
 
   const modData = data.items.filter(el => el.category === levels[category]);
@@ -171,13 +171,12 @@ const FormListEdit = (props) => {
         <MinusCircleOutlined
           style={{ marginBottom: "10px" }}
           onClick={() => {
-
+            removeScopeItem(data.id)
           }}
         />
       </React.Fragment>
     )
   })
-  console.log(editInputs)
   return editInputs;
 }
 

@@ -26,7 +26,7 @@ export default class TasksPage extends React.Component {
     this.updatetaskList();
   }
 
-  showCreateTask = () => {
+  showTaskModal = () => {
     this.setState({
       taskModal: true,
       currentTask: null
@@ -36,17 +36,15 @@ export default class TasksPage extends React.Component {
   showEditTask = (e, task) => {
     e.preventDefault();
     const taskEdit = this.state.taskList.filter(item => {
-      console.log(task)
       return item.id === task;
     })[0]
-    console.log(taskEdit)
     this.setState({
       currentTask: taskEdit,
       taskModal: true
     });
   };
 
-  cancelCreateTask = () => {
+  cancelTaskModal = () => {
     this.setState({
       taskModal: false
     });
@@ -62,7 +60,6 @@ export default class TasksPage extends React.Component {
       'endTime': task['endTime'].format('YYYY-MM-DD'),
       items: modRest
     };
-    console.log(modTask)
 
     if (type === 'create') {
       this.client.createData(`tasks`, modTask)
@@ -73,8 +70,14 @@ export default class TasksPage extends React.Component {
           });
         }).catch((err) => message.warning(`${err.message}`))
     } else if (type === 'edit') {
-      this.client.modifyData(`tasks/${task.id}`, modTask)
-        .then(() => this.updatetaskList())
+      this.client.modifyData(`tasks/${this.state.currentTask.id}`, modTask)
+        .then(() => {
+          this.updatetaskList();
+          this.setState({
+            taskModal: false,
+            currentTask: null
+          });
+        })
         .catch((err) => message.warning(`${err.message}`))
     }
   };
@@ -85,17 +88,29 @@ export default class TasksPage extends React.Component {
       .catch((err) => message.warning(`${err.message}`))
   }
 
+  removeScopeItem = (id) => {
+    const newItems = [...this.state.currentTask.items].filter(el => el.id !== id)
+    const newCurrentTask = { ...this.state.currentTask, items: newItems };
+    console.log(newItems)
+
+    this.setState({
+      currentTask: newCurrentTask
+    })
+  }
+
   render() {
     const { taskList, taskModal, currentTask } = this.state;
+    console.log('current task', currentTask)
 
     return (
       <div className="tasks-page">
         {taskList && <TaskList deleteTask={this.deleteTask} editTask={this.showEditTask} data={taskList} />}
-        <Button type="primary" onClick={this.showCreateTask}>Create task</Button>
+        <Button type="primary" onClick={this.showTaskModal}>Create task</Button>
         {taskModal && <TaskForm
           data={currentTask}
           onFinish={this.onFinish}
-          onCancel={this.cancelCreateTask}
+          onCancel={this.cancelTaskModal}
+          removeScopeItem={this.removeScopeItem}
         />}
       </div>
     )
