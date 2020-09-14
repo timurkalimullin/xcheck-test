@@ -5,12 +5,17 @@ import { levels } from '../constants';
 
 const TaskList = (props) => {
   const { deleteTask, editTask } = props;
+  const sorting = (a, b) => {
+    if (a > b) { return -1; }
+    if (a < b) { return 1; }
+    return 0;
+  }
   const columns = [
-    { title: 'Name', dataIndex: 'name', key: 'name', sorter: (a, b) => a?.name > b?.name, },
-    { title: 'Author', dataIndex: 'author', key: 'author', sorter: (a, b) => a?.author > b?.author, },
-    { title: 'State', dataIndex: 'state', key: 'state', sorter: (a, b) => a?.state > b?.state, },
-    { title: 'Starts', dataIndex: 'startTime', key: 'startTime', sorter: (a, b) => a?.startTime > b?.startTime, },
-    { title: 'Deadline', dataIndex: 'endTime', key: 'endTime', sorter: (a, b) => a?.endTime > b?.endTime, },
+    { title: 'Name', dataIndex: 'name', key: 'name', sorter: { compare: (a, b) => sorting(a.name, b.name) }, },
+    { title: 'Author', dataIndex: 'author', key: 'author', sorter: { compare: (a, b) => sorting(a.author, b.author) }, },
+    { title: 'State', dataIndex: 'state', key: 'state', sorter: { compare: (a, b) => sorting(a.state, b.state) }, },
+    { title: 'Starts', dataIndex: 'startTime', key: 'startTime', sorter: { compare: (a, b) => sorting(a.startTime, b.startTime) }, },
+    { title: 'Deadline', dataIndex: 'endTime', key: 'endTime', sorter: { compare: (a, b) => sorting(a.endTime, b.endTime) }, },
     {
       title: 'Action', key: 'operation', fixed: 'right', width: 100, render: (text) =>
         <React.Fragment>
@@ -68,6 +73,8 @@ const TaskList = (props) => {
         expandedRowRender: record => <div style={{ margin: 0 }}>{record.descr}</div>
       }}
       dataSource={data}
+      bordered
+      title={() => <h2>Task List</h2>}
     />
   );
 };

@@ -1,10 +1,10 @@
 const layout = {
   labelCol: {
-    span: 8,
+    span: 4,
     offset: 2
   },
   wrapperCol: {
-    span: 8,
+    span: 16,
     offset: 2
   },
 };

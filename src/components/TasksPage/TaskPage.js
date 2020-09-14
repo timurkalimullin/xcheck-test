@@ -2,24 +2,30 @@ import React from 'react';
 
 import TaskList from './TaskList/TaskList';
 import TaskForm from './TaskForm/TaskForm';
-import { Button, message } from 'antd';
+import { Button, message, Spin } from 'antd';
 
 export default class TasksPage extends React.Component {
   state = {
     taskList: null,
     currentTask: null,
-    taskModal: false
+    taskModal: false,
+    confirmLoading: false,
+    isLoading: true
   }
   client = this.props.client;
 
   updatetaskList() {
+    this.setState({
+      isLoading: true
+    })
     this.client.getData('tasks')
       .then((data) => {
         this.setState(() => ({
           taskList: data,
           currentTask: null
         }))
-      }).catch((err) => message.warning(`${err.message}`))
+      }).then(() => this.setState({ isLoading: false }))
+      .catch((err) => message.warning(`${err.message}`))
   }
 
   componentDidMount() {
@@ -46,7 +52,8 @@ export default class TasksPage extends React.Component {
 
   cancelTaskModal = () => {
     this.setState({
-      taskModal: false
+      taskModal: false,
+      currentTask: null
     });
   };
 
@@ -61,6 +68,10 @@ export default class TasksPage extends React.Component {
       items: modRest
     };
 
+    this.setState({
+      confirmLoading: true
+    })
+
     if (type === 'create') {
       this.client.createData(`tasks`, modTask)
         .then(() => {
@@ -68,7 +79,8 @@ export default class TasksPage extends React.Component {
           this.setState({
             taskModal: false
           });
-        }).catch((err) => message.warning(`${err.message}`))
+        }).then(() => this.setState({ confirmLoading: false }))
+        .catch((err) => message.warning(`${err.message}`))
     } else if (type === 'edit') {
       this.client.modifyData(`tasks/${this.state.currentTask.id}`, modTask)
         .then(() => {
@@ -77,7 +89,7 @@ export default class TasksPage extends React.Component {
             taskModal: false,
             currentTask: null
           });
-        })
+        }).then(() => this.setState({ confirmLoading: false }))
         .catch((err) => message.warning(`${err.message}`))
     }
   };
@@ -99,19 +111,20 @@ export default class TasksPage extends React.Component {
   }
 
   render() {
-    const { taskList, taskModal, currentTask } = this.state;
+    const { taskList, taskModal, currentTask, confirmLoading, isLoading } = this.state;
     console.log('current task', currentTask)
-
     return (
       <div className="tasks-page">
-        {taskList && <TaskList deleteTask={this.deleteTask} editTask={this.showEditTask} data={taskList} />}
+        {isLoading ? <Spin /> : <TaskList deleteTask={this.deleteTask} editTask={this.showEditTask} data={taskList} />}
         <Button type="primary" onClick={this.showTaskModal}>Create task</Button>
-        {taskModal && <TaskForm
+        <TaskForm
           data={currentTask}
           onFinish={this.onFinish}
           onCancel={this.cancelTaskModal}
           removeScopeItem={this.removeScopeItem}
-        />}
+          taskModal={taskModal}
+          confirmLoading={confirmLoading}
+        />
       </div>
     )
   }

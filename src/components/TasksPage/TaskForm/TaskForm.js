@@ -1,75 +1,87 @@
 import React from 'react';
-import { Form, Input, DatePicker, Button, Select } from 'antd';
+import { Form, Input, DatePicker, Select, Modal, message } from 'antd';
 import { FormList, FormListEdit } from '../FormList/FormList';
 import { layout, validateMessages, config, levels } from '../constants';
 
-const TaskForm = (props) => {
-  const { data } = props;
+import './taskform.css';
 
-  const scopeList = Object.keys(levels).map(key => {
-    return <React.Fragment key={key}>
-      <h2 style={{ color: "gray" }}>{levels[key]}</h2>
-      {data && <FormListEdit category={key} data={data} removeScopeItem={props.removeScopeItem} />}
-      <FormList name={key} />
-    </React.Fragment>
-  })
+class TaskForm extends React.Component {
+  form = React.createRef();
+  render() {
+    const { data, taskModal, onCancel, onFinish, confirmLoading, removeScopeItem } = this.props;
 
-  return (
-    <React.Fragment>
-      <h2 style={{ fontSize: "3em" }}>Task {data ? 'edit' : 'create'}</h2>
-      <Form {...layout} name="nest-messages"
-        onFinish={(values) => data ? props.onFinish(values, 'edit') : props.onFinish(values, 'create')}
-        validateMessages={validateMessages}>
+    const scopeList = Object.keys(levels).map(key => {
+      return <React.Fragment key={key}>
+        <h2 style={{ color: "gray" }}>{levels[key]}</h2>
+        {data && <FormListEdit category={key} data={data} removeScopeItem={removeScopeItem} />}
+        <FormList name={key} />
+      </React.Fragment>
+    })
 
-        <Form.Item name={['task', 'taskName']} label="Name" rules={[{ required: true }]}
-          initialValue={data ? data.taskName : ''}>
-          <Input />
-        </Form.Item>
+    return (
+      <React.Fragment>
+        <Modal
+          title={<h2 style={{ fontSize: "3em" }}>Task {data ? 'edit' : 'create'}</h2>}
+          minWidth={"500px"}
+          style={{ textAlign: "center" }}
+          width={"900px"}
+          visible={taskModal}
+          okText="Submit"
+          confirmLoading={confirmLoading}
+          cancelText="Cancel"
+          destroyOnClose={true}
+          onCancel={onCancel}
+          onOk={() => {
+            this.form.validateFields()
+              .then((values) => {
+                data ? onFinish(values, 'edit') : onFinish(values, 'create')
+              }).then(() => this.form.resetFields())
+              .catch((() => message.warning('Something went wrong!')))
+          }}>
+          <Form {...layout} name="nest-messages"
+            ref={this.form}
+            validateMessages={validateMessages}>
 
-        <Form.Item name={['task', 'description']} label="Description"
-          initialValue={data ? data.description : ''}>
-          <Input.TextArea />
-        </Form.Item>
+            <Form.Item name={['task', 'taskName']} label="Name" rules={[{ required: true }]}
+              initialValue={data ? data.taskName : ''}>
+              <Input />
+            </Form.Item>
 
-        <Form.Item name={['task', 'state']} label="State"
-          initialValue={data ? data.state : ''}>
-          <Select>
-            <Select.Option value="DRAFT">Draft</Select.Option>
-            <Select.Option value="COMPLETE">Complete</Select.Option>
-            <Select.Option value="ARCHEIVED">Archeived</Select.Option>
-          </Select>
-        </Form.Item>
+            <Form.Item name={['task', 'description']} label="Description"
+              initialValue={data ? data.description : ''}>
+              <Input.TextArea />
+            </Form.Item>
 
-        <Form.Item name={['task', 'startTime']} label="Start" {...config}>
-          <DatePicker />
-        </Form.Item>
+            <Form.Item name={['task', 'state']} label="State"
+              initialValue={data ? data.state : ''}>
+              <Select>
+                <Select.Option value="DRAFT">Draft</Select.Option>
+                <Select.Option value="COMPLETE">Complete</Select.Option>
+                <Select.Option value="ARCHEIVED">Archeived</Select.Option>
+              </Select>
+            </Form.Item>
 
-        <Form.Item name={['task', 'endTime']} label="Deadline" {...config}>
-          <DatePicker />
-        </Form.Item>
+            <Form.Item name={['task', 'startTime']} label="Start" {...config}>
+              <DatePicker />
+            </Form.Item>
 
-        <Form.Item name={['task', 'author']} label="Author"
-          initialValue={'Timur Kalimullin'} hidden={true}>
-          <Input />
-        </Form.Item>
+            <Form.Item name={['task', 'endTime']} label="Deadline" {...config}>
+              <DatePicker />
+            </Form.Item>
 
-        <h2 >Scopes</h2>
+            <Form.Item name={['task', 'author']} label="Author"
+              initialValue={'Timur Kalimullin'} hidden={true}>
+              <Input />
+            </Form.Item>
 
-        {scopeList}
+            <h2 >Scopes</h2>
 
-        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-          <Button type="secondary" htmlType="button"
-            onClick={props.onCancel}>
-            Cancel
-        </Button>
-
-          <Button type="primary" htmlType="submit">
-            Submit
-        </Button>
-        </Form.Item>
-      </Form>
-    </React.Fragment>
-  );
+            {scopeList}
+          </Form>
+        </Modal>
+      </React.Fragment>
+    );
+  }
 };
 
 export default TaskForm;

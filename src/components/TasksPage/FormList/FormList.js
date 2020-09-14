@@ -17,7 +17,7 @@ const FormList = (props) => {
               <div key={field.name}>
                 <Form.Item
                   label="Title"
-                  wrapperCol={{ offset: 2, span: 8 }}
+                  wrapperCol={{ offset: 2, span: 16 }}
                   name={[field.name, 'title']}
                   fieldKey={[field.fieldKey, 'title']}
                   rules={[{ required: true, message: 'Your input is required' }]}
@@ -26,7 +26,7 @@ const FormList = (props) => {
                 </Form.Item>
                 <Form.Item
                   label="Description"
-                  wrapperCol={{ offset: 2, span: 8 }}
+                  wrapperCol={{ offset: 2, span: 16 }}
                   name={[field.name, 'description']}
                   fieldKey={[field.fieldKey, 'description']}
                   rules={[{ required: true, message: 'Your input is required' }]}
@@ -112,7 +112,7 @@ const FormListEdit = (props) => {
       <React.Fragment key={`${editedCategory}_${i}`}>
         <Form.Item
           label="Title"
-          wrapperCol={{ offset: 2, span: 8 }}
+          wrapperCol={{ offset: 2, span: 16 }}
           name={[`${editedCategory}_${i}`, 'title']}
           rules={[{ required: true, message: 'Your input is required' }]}
           initialValue={data.title}
@@ -121,7 +121,7 @@ const FormListEdit = (props) => {
         </Form.Item>
         <Form.Item
           label="Description"
-          wrapperCol={{ offset: 2, span: 8 }}
+          wrapperCol={{ offset: 2, span: 16 }}
           name={[`${editedCategory}_${i}`, 'description']}
           rules={[{ required: true, message: 'Your input is required' }]}
           initialValue={data.description}
