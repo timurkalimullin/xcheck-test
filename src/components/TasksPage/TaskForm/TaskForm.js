@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, DatePicker, Select, Modal, message } from 'antd';
+import { Form, Input, DatePicker, Select } from 'antd';
 import { FormList, FormListEdit } from '../FormList/FormList';
 import { layout, validateMessages, config, levels } from '../constants';
 
@@ -8,13 +8,12 @@ import './taskform.css';
 const authorName = 'Timur Kalimullin';
 
 const TaskForm = (props) => {
-  const form = React.useRef();
 
-  const { data, taskModal, onCancel, onFinish, confirmLoading, removeScopeItem } = props;
+  const { data, removeScopeItem, formRef } = props;
 
   const scopeList = Object.keys(levels).map(key => {
     return <React.Fragment key={key}>
-      <h2 style={{ color: "gray" }}>{levels[key]}</h2>
+      <h2>{levels[key]}</h2>
       {data && <FormListEdit category={key} data={data} removeScopeItem={removeScopeItem} />}
       <FormList name={key} />
     </React.Fragment>
@@ -22,65 +21,46 @@ const TaskForm = (props) => {
 
   return (
     <React.Fragment>
-      <Modal
-        title={<h2 style={{ fontSize: "3em" }}>Task {data ? 'edit' : 'create'}</h2>}
-        minWidth={"500px"}
-        style={{ textAlign: "center" }}
-        width={"900px"}
-        visible={taskModal}
-        okText="Submit"
-        confirmLoading={confirmLoading}
-        cancelText="Cancel"
-        destroyOnClose={true}
-        onCancel={onCancel}
-        onOk={() => {
-          form.current.validateFields()
-            .then((values) => {
-              data ? onFinish(values, 'edit') : onFinish(values, 'create')
-            }).then(() => form.current.resetFields())
-            .catch((() => message.error('Something went wrong!')))
-        }}>
-        <Form {...layout} name="nest-messages"
-          ref={form}
-          validateMessages={validateMessages}>
+      <Form {...layout} name="nest-messages"
+        ref={formRef}
+        validateMessages={validateMessages}>
 
-          <Form.Item name={['task', 'taskName']} label="Name" rules={[{ required: true }]}
-            initialValue={data ? data.taskName : ''}>
-            <Input />
-          </Form.Item>
+        <Form.Item name={['task', 'taskName']} label="Name" rules={[{ required: true }]}
+          initialValue={data ? data.taskName : ''}>
+          <Input />
+        </Form.Item>
 
-          <Form.Item name={['task', 'description']} label="Description"
-            initialValue={data ? data.description : ''}>
-            <Input.TextArea />
-          </Form.Item>
+        <Form.Item name={['task', 'description']} label="Description"
+          initialValue={data ? data.description : ''}>
+          <Input.TextArea />
+        </Form.Item>
 
-          <Form.Item name={['task', 'state']} label="State"
-            initialValue={data ? data.state : ''}>
-            <Select>
-              <Select.Option value="DRAFT">Draft</Select.Option>
-              <Select.Option value="COMPLETE">Complete</Select.Option>
-              <Select.Option value="ARCHEIVED">Archeived</Select.Option>
-            </Select>
-          </Form.Item>
+        <Form.Item name={['task', 'state']} label="State"
+          initialValue={data ? data.state : ''}>
+          <Select>
+            <Select.Option value="DRAFT">Draft</Select.Option>
+            <Select.Option value="COMPLETE">Complete</Select.Option>
+            <Select.Option value="ARCHEIVED">Archeived</Select.Option>
+          </Select>
+        </Form.Item>
 
-          <Form.Item name={['task', 'startTime']} label="Start" {...config}>
-            <DatePicker />
-          </Form.Item>
+        <Form.Item name={['task', 'startTime']} label="Start" {...config}>
+          <DatePicker />
+        </Form.Item>
 
-          <Form.Item name={['task', 'endTime']} label="Deadline" {...config}>
-            <DatePicker />
-          </Form.Item>
+        <Form.Item name={['task', 'endTime']} label="Deadline" {...config}>
+          <DatePicker />
+        </Form.Item>
 
-          <Form.Item name={['task', 'author']} label="Author"
-            initialValue={data ? data.author : authorName} hidden={true}>
-            <Input />
-          </Form.Item>
+        <Form.Item name={['task', 'author']} label="Author"
+          initialValue={data ? data.author : authorName} hidden={true}>
+          <Input />
+        </Form.Item>
 
-          <h2 >Scopes</h2>
+        <h2 style={{ fontSize: "28px", fontWeight: "bold" }}>Scopes</h2>
 
-          {scopeList}
-        </Form>
-      </Modal>
+        {scopeList}
+      </Form>
     </React.Fragment>
   );
 };
