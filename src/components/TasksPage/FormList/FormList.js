@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Form, Input, InputNumber, Button } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { layout, levels } from '../constants';
+import { layout, levels, randomId } from '../constants';
 
 const FormList = (props) => {
   return (
@@ -62,7 +62,7 @@ const FormList = (props) => {
                 <Form.Item
                   name={[field.name, 'id']}
                   key={[field.key, props.name]}
-                  initialValue={`${props.name}_p${ind + 1}`}
+                  initialValue={randomId()}
                   hidden="true"
                 >
                   <Input />
@@ -108,8 +108,9 @@ const FormListEdit = (props) => {
 
   const modData = data.items.filter(el => el.category === levels[category]);
   const editInputs = modData.map((data, i) => {
+    const unique = randomId();
     return (
-      <React.Fragment key={`${editedCategory}_${i}`}>
+      <React.Fragment key={unique}>
         <Form.Item
           label="Title"
           wrapperCol={{ offset: 2, span: 16 }}
@@ -156,7 +157,7 @@ const FormListEdit = (props) => {
         </Form.Item>
         <Form.Item
           name={[`${editedCategory}_${i}`, 'id']}
-          initialValue={`${category}_pe${i + 1}`}
+          initialValue={data.id}
           hidden="true"
         >
           <Input />

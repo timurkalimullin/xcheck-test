@@ -1,6 +1,6 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import { Table, Popconfirm } from 'antd';
+import { Table, Popconfirm, Divider } from 'antd';
 import { levels, pagination } from '../constants';
 
 const TaskList = (props) => {
@@ -40,15 +40,15 @@ const TaskList = (props) => {
         return (
           <li key={el.title}>
             <h3>{el.title}</h3>
-            <p>Min score: {el.minScore}</p>
-            <p>Max score: {el.maxScore}</p>
+            <p>Min score: {el.minScore} ; Max score: {el.maxScore}</p>
             <p>{el.description || 'No scope items yet'}</p>
           </li>
         )
       })
 
       return (
-        <React.Fragment key={category}>
+        <React.Fragment key={category} >
+          <Divider />
           <h2>{category}</h2>
           <ol>{scopeItems.length > 0 ? scopeItems : 'No scope items yet'}</ol>
         </React.Fragment>
@@ -68,7 +68,7 @@ const TaskList = (props) => {
           <h2>Description</h2>
           {description}
         </div>
-        <ol>{scopes}</ol>
+        <div style={{ paddingLeft: "30px" }}>{scopes}</div>
       </React.Fragment>)
     })
   })

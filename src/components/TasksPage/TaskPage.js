@@ -103,7 +103,7 @@ export default class TasksPage extends React.Component {
 
   exportTaskInJson = (e, data) => {
     e.preventDefault();
-    console.log(data)
+
     let json = JSON.stringify(data);
 
     //Convert JSON string to BLOB.

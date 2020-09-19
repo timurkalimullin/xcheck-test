@@ -30,17 +30,17 @@ const TaskForm = (props) => {
           <Input />
         </Form.Item>
 
-        <Form.Item name={['task', 'description']} label="Description"
+        <Form.Item name={['task', 'description']} label="Description" rules={[{ required: true }]}
           initialValue={data ? data.description : ''}>
           <Input.TextArea />
         </Form.Item>
 
-        <Form.Item name={['task', 'state']} label="State"
+        <Form.Item name={['task', 'state']} label="State" rules={[{ required: true }]}
           initialValue={data ? data.state : ''}>
           <Select>
             <Select.Option value="DRAFT">Draft</Select.Option>
-            <Select.Option value="COMPLETE">Complete</Select.Option>
-            <Select.Option value="ARCHEIVED">Archeived</Select.Option>
+            <Select.Option value="PUBLISHED">Published</Select.Option>
+            <Select.Option value="ARCHIVED">Archived</Select.Option>
           </Select>
         </Form.Item>
 
